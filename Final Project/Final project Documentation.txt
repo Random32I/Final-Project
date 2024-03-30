@@ -1,0 +1,69 @@
+Final project Documentation
+
+EVs Class:
+Main class
+
+Functions:
+Main(): Main Function.
+
+DistanceToChargingStation(): Finds the distance to the nearest charging station from the root node as well and displays the shortest path taken to get there.
+
+FindCloserNode(Node currentNode): Takes a node and finds the connected node with the smallest cost and returns that node.
+
+IndexOfShortestDistance(): Returns the index of the node with smallest distance from the root node that has not already been visited. (0-22 corresponding to the letter name of the node)
+
+InitializeNodes(): Sets up the nodes list as well as initializes all nodes within it to have their predetermined connections and connection weights. Also designates charging station nodes.
+
+GetNode(char name): Returns the node that has the given name.
+
+
+Variables:
+List<Node> nodes: List of all nodes.
+
+bool initialized: If the nodes have been initialized.
+
+char StartNodeName: Name of the starting node.
+
+int[] shortestDistances: List of distances between root node and all other nodes
+
+
+Node Class:
+
+Functions:
+AddNode(char name, int weight): Adds a connection to the node with the given name, and gives the connection the given weight.
+
+RemoveNode(char name): Removes the connection between the current node and the node represented by the given name.
+
+GetConnections(): Returns the connectedNodes List.
+
+GetConnectionWeights():  Returns the weights List.
+
+SetVisited(): Sets a node as visited.
+
+GetVisited(): Gets a nodes visited state.
+
+SetDistance(int value): Sets a nodes distance from the root node as the given value.
+
+GetDistance(): Gets the nodes distance from the root node.
+
+GetName(): Gets the nodes name.
+
+SetName(char newName): Sets the nodes name as the given name.
+
+GetChargingStation(): Gets if the node is a charging station.
+
+SetChargingStation(): Sets the node as a charging station.
+
+
+Variables:
+char name: name of the node.
+
+bool isChargingStation: if the node is a charging station.
+
+bool visited: if the node was visited.
+
+int distance: distance from root node.
+
+Linked Lists:
+List<char> connectedNodes: Names of each connected node.
+List<int> weights: Weights of the connection between the node and its connected nodes.
