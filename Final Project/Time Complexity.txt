@@ -1,0 +1,128 @@
+﻿static int DistanceToChargingStation()
+    {
+        Node currentNode; //1
+        //Getting the distances of each node
+        for (int i = 0; i < 23; i++)    //23 + 1
+        {
+            currentNode = nodes[IndexOfShortestDistance()]; //23
+
+
+            for (int j = 0; j < currentNode.GetConnections().Count; j++)  //23 * (n+1)
+            {
+                if (!GetNode(currentNode.GetConnections()[j]).GetVisited()) //23 * n
+                {
+                    int newDistance = currentNode.GetDistance() + currentNode.GetConnectionWeights()[j]; //23 * n
+
+
+                    if (newDistance < GetNode(currentNode.GetConnections()[j]).GetDistance()) //23 *n
+                    {
+                        GetNode(currentNode.GetConnections()[j]).SetDistance(newDistance); //23 * n
+                        shortestDistances[currentNode.GetConnections()[j] - 65] = newDistance; //23 * n
+                    }
+                }
+            }
+            currentNode.SetVisited(); //23
+        }
+
+
+        //Removing unoptimal routes
+        for (int i = 0; i < 23; i++) //23+1
+        {
+            for (int j = 0; j < nodes[i].GetConnections().Count; j++) //23 * (n+1)
+            {
+                if (GetNode(nodes[i].GetConnections()[j]).GetDistance() > nodes[i].GetConnectionWeights()[j] + nodes[i].GetDistance())  //23 * n
+                {
+                    nodes[i].RemoveNode(nodes[i].GetConnections()[j]); //23 * n
+                }
+            }
+        }
+
+
+        //Finding the closest Charging station
+
+
+        int[] chargingStations = new int[4]
+    {
+            shortestDistances[7],
+            shortestDistances[10],
+            shortestDistances[16],
+            shortestDistances[19]
+    };   //1
+
+
+        int lowestValue = int.MaxValue;   //1
+
+
+        //set to node H as a default, will never be not assigned though
+        Node closestCharger = GetNode('H');   //1
+
+
+        for (int i = 0; i < 4; i++)   //4+1
+        {
+            if (chargingStations[i] < lowestValue) //4
+            {
+                lowestValue = chargingStations[i];  //4
+
+
+                switch (i)  //4
+                {
+                    case 0:
+                        closestCharger = GetNode('H');
+                        break;
+                    case 1:
+                        closestCharger = GetNode('K');
+                        break;
+                    case 2:
+                        closestCharger = GetNode('Q');
+                        break;
+                    case 3:
+                        closestCharger = GetNode('T');
+                        break;
+                }   //4
+            }
+        }
+
+
+        //Recommending Path to Nearest Charging station
+        currentNode = closestCharger;   //1
+
+
+        List<char> route = new List<char>(); //1
+
+
+        while (currentNode.GetName() != StartNodeName) //n+1
+        {
+            route.Add(currentNode.GetName()); //n
+            currentNode = FindCloserNode(currentNode);  //n
+        }
+        //Adds the Root Node
+        route.Add(currentNode.GetName());  //1
+
+
+        Console.Write("The shortest route will be: "); //1
+        for (int i = route.Count - 1; i >= 0; i--) //n+1
+        {
+            if (i != 0) //n
+            {
+                Console.Write($"{route[i]}, ");
+            }
+            else
+            {
+                //Write the last element without a comma
+                Console.Write($"{route[i]} \n");
+            } //n
+        }
+
+
+        return lowestValue;  //1
+    }
+
+
+Time Complexity: 
+O(1 + 23 + 1 + 23 + 23(n+1) + 23n + 23n + 23n + 23n + 23n + 23 + 23 + 1 + 23(n+1) + 23n + 23n + 1 + 1 + 1 + 4 + 1 + 4 + 4 + 4 + 4 + 1 + 1 + n + 1 + n + n + 1 + 1 + n + 1 + n + n + 1)
+
+
+O(213n+172) → O(n) 
+
+
+The main reason that the big O notation turned out to be O(n) was because I accidentally hardcoded it for this specific length of nodes rather than having it be able to handle any number, which would make it O(n^2)
