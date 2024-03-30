@@ -38,91 +38,52 @@
         }
 
 
-        //Finding the closest Charging station
-
-
-        int[] chargingStations = new int[4]
+        // Reccomending the shortest path to each charging station
+        Node[] chargingStations = new Node[4]
     {
-            shortestDistances[7],
-            shortestDistances[10],
-            shortestDistances[16],
-            shortestDistances[19]
-    };   //1
+            nodes[7],
+            nodes[10],
+            nodes[16],
+            nodes[19]
+    }; //1
 
-
-        int lowestValue = int.MaxValue;   //1
-
-
-        //set to node H as a default, will never be not assigned though
-        Node closestCharger = GetNode('H');   //1
-
-
-        for (int i = 0; i < 4; i++)   //4+1
+        for (int i = 0; i < 4; i++) //4 + 1
         {
-            if (chargingStations[i] < lowestValue) //4
+            currentNode = chargingStations[i]; //4
+
+            List<char> route = new List<char>(); //4
+
+            while (currentNode.GetName() != StartNodeName) //4 * (n+1)
             {
-                lowestValue = chargingStations[i];  //4
+                route.Add(currentNode.GetName()); //4n
+                currentNode = FindCloserNode(currentNode); //4n
+            }
+            //Adds the Root Node
+            route.Add(currentNode.GetName()); //4
 
-
-                switch (i)  //4
+            Console.Write($"The shortest route to {chargingStations[i].GetName()} will be: "); //4
+            for (int j = route.Count - 1; j >= 0; j--) //4 * (n+1)
+            {
+                if (j != 0)
                 {
-                    case 0:
-                        closestCharger = GetNode('H');
-                        break;
-                    case 1:
-                        closestCharger = GetNode('K');
-                        break;
-                    case 2:
-                        closestCharger = GetNode('Q');
-                        break;
-                    case 3:
-                        closestCharger = GetNode('T');
-                        break;
-                }   //4
+                    Console.Write($"{route[j]}, ");
+                }
+                else
+                {
+                    //Write the last element without a comma
+                    Console.Write($"{route[j]} \n");
+                } //4n
             }
+            Console.WriteLine($"With a distance of {chargingStations[i].GetDistance()}"); //4
         }
-
-
-        //Recommending Path to Nearest Charging station
-        currentNode = closestCharger;   //1
-
-
-        List<char> route = new List<char>(); //1
-
-
-        while (currentNode.GetName() != StartNodeName) //n+1
-        {
-            route.Add(currentNode.GetName()); //n
-            currentNode = FindCloserNode(currentNode);  //n
-        }
-        //Adds the Root Node
-        route.Add(currentNode.GetName());  //1
-
-
-        Console.Write("The shortest route will be: "); //1
-        for (int i = route.Count - 1; i >= 0; i--) //n+1
-        {
-            if (i != 0) //n
-            {
-                Console.Write($"{route[i]}, ");
-            }
-            else
-            {
-                //Write the last element without a comma
-                Console.Write($"{route[i]} \n");
-            } //n
-        }
-
-
-        return lowestValue;  //1
     }
 
 
 Time Complexity: 
-O(1 + 23 + 1 + 23 + 23(n+1) + 23n + 23n + 23n + 23n + 23n + 23 + 23 + 1 + 23(n+1) + 23n + 23n + 1 + 1 + 1 + 4 + 1 + 4 + 4 + 4 + 4 + 1 + 1 + n + 1 + n + n + 1 + 1 + n + 1 + n + n + 1)
+O(1 + 23 + 1 + 23 + 23(n+1) + 23n + 23n + 23n + 23n + 23n + 23 + 23 + 1 + 23(n+1) + 23n + 23n + 1 + 4 + 1 + 4 + 4 + 4(n+1) + 4n + 4n + 4 + 4 + 4(n+1) + 4n + 4)
 
 
-O(213n+172) → O(n) 
+O(227n+175) → O(n) 
 
 
 The main reason that the big O notation turned out to be O(n) was because I accidentally hardcoded it for this specific length of nodes rather than having it be able to handle any number, which would make it O(n^2)

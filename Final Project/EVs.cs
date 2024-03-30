@@ -32,14 +32,14 @@ public class EVs
             }
         }
 
-        Console.WriteLine($"With a distance of {DistanceToChargingStation()}");
+        DistanceToChargingStation();
     }
 
-    static int DistanceToChargingStation()
+    static void DistanceToChargingStation()
     {
         Node currentNode;
         //Getting the distances of each node
-        for (int i = 0; i < 23; i++)    
+        for (int i = 0; i < 23; i++)
         {
             currentNode = nodes[IndexOfShortestDistance()];
 
@@ -71,73 +71,45 @@ public class EVs
             }
         }
 
-        //Finding the closest Charging station
 
-        int[] chargingStations = new int[4]
+        // Reccomending the shortest path to each charging station
+        Node[] chargingStations = new Node[4]
     {
-            shortestDistances[7],
-            shortestDistances[10],
-            shortestDistances[16],
-            shortestDistances[19]
+            nodes[7],
+            nodes[10],
+            nodes[16],
+            nodes[19]
     };
-
-        int lowestValue = int.MaxValue;
-
-        //set to node H as a default, will never be not assigned though
-        Node closestCharger = GetNode('H');
 
         for (int i = 0; i < 4; i++)
         {
-            if (chargingStations[i] < lowestValue)
-            {
-                lowestValue = chargingStations[i];
+            currentNode = chargingStations[i];
 
-                switch (i)
+            List<char> route = new List<char>();
+
+            while (currentNode.GetName() != StartNodeName)
+            {
+                route.Add(currentNode.GetName());
+                currentNode = FindCloserNode(currentNode);
+            }
+            //Adds the Root Node
+            route.Add(currentNode.GetName());
+
+            Console.Write($"The shortest route to {chargingStations[i].GetName()} will be: ");
+            for (int j = route.Count - 1; j >= 0; j--)
+            {
+                if (j != 0)
                 {
-                    case 0:
-                        closestCharger = GetNode('H');
-                        break;
-                    case 1:
-                        closestCharger = GetNode('K');
-                        break;
-                    case 2:
-                        closestCharger = GetNode('Q');
-                        break;
-                    case 3:
-                        closestCharger = GetNode('T');
-                        break;
+                    Console.Write($"{route[j]}, ");
+                }
+                else
+                {
+                    //Write the last element without a comma
+                    Console.Write($"{route[j]} \n");
                 }
             }
+            Console.WriteLine($"With a distance of {chargingStations[i].GetDistance()}");
         }
-
-        //Recommending Path to Nearest Charging station
-        currentNode = closestCharger;
-
-        List<char> route = new List<char>();
-
-        while (currentNode.GetName() != StartNodeName)
-        {
-            route.Add(currentNode.GetName());
-            currentNode = FindCloserNode(currentNode);
-        }
-        //Adds the Root Node
-        route.Add(currentNode.GetName());
-
-        Console.Write("The shortest route will be: ");
-        for (int i = route.Count - 1; i >= 0; i--)
-        {
-            if (i != 0)
-            {
-                Console.Write($"{route[i]}, ");
-            }
-            else
-            {
-                //Write the last element without a comma
-                Console.Write($"{route[i]} \n");
-            }
-        }
-
-        return lowestValue;
     }
 
     static Node FindCloserNode(Node currentNode)
